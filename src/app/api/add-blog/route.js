@@ -1,5 +1,5 @@
 import connectToDb from "@/database"
-import Blog from "@/model/blog"
+import Blog from "@/models/blog"
 import Joi from "joi"
 import { NextResponse } from "next/server"
 

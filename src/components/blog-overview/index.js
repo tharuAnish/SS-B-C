@@ -54,6 +54,19 @@ export default function BlogOverview({ blogList }) {
     }
   }
 
+  async function handleDeleteBlogByID(getCurrentID) {
+    try {
+      const apiResponse = await fetch(`/api/delete-blog?id=${getCurrentID}`, {
+        method: "DELETE",
+      })
+      const result = await apiResponse.json()
+
+      if (result?.success) router.refresh()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return (
     <main className=" min-h-screen  flex flex-col gap-10  p-24">
       <AddNewBlog
