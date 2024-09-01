@@ -5,10 +5,10 @@ import { NextResponse } from "next/server"
 
 const AddNewBlog = Joi.object({
   title: Joi.string().required(),
-  description: Joi.string().required,
+  description: Joi.string().required(),
 })
 
-export default async function POST(req) {
+export async function POST(req) {
   try {
     await connectToDb()
 
@@ -31,7 +31,7 @@ export default async function POST(req) {
     const newlyCreatedBlogItem = await Blog.create(extractBlogData)
     if (newlyCreatedBlogItem) {
       return NextResponse.json({
-        seccess: true,
+        success: true,
         message: "Blog added Successfully",
       })
     } else {
