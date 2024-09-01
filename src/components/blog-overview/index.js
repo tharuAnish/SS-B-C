@@ -23,6 +23,7 @@ export default function BlogOverview({ blogList }) {
   const [openBlogDialog, setOpenBlogDialog] = useState(false)
   const [loading, setLoading] = useState(false)
   const [blogFormData, setBlogFormData] = useState(initialBlogFormData)
+  const [currentEditedBlogID, setCurrentEditedBlogID] = useState(null)
 
   const router = useRouter()
 
@@ -35,15 +36,22 @@ export default function BlogOverview({ blogList }) {
   async function handleSaveBlogData() {
     try {
       setLoading(true)
-      const apiResponse = await fetch("/api/add-blog", {
-        method: "POST",
-        body: JSON.stringify(blogFormData),
-      })
+      const apiResponse =
+        currentEditedBlogID !== null
+          ? await fetch(`/api/update-blog?id=${currentEditedBlogID}`, {
+              method: "PUT",
+              body: JSON.stringify(blogFormData),
+            })
+          : await fetch("/api/add-blog", {
+              method: "POST",
+              body: JSON.stringify(blogFormData),
+            })
       const result = await apiResponse.json()
       if (result?.success) {
         setBlogFormData(initialBlogFormData)
         setOpenBlogDialog(false)
         setLoading(false)
+        setCurrentEditedBlogID(null)
         router.refresh()
       }
       console.log(result)
@@ -67,6 +75,15 @@ export default function BlogOverview({ blogList }) {
     }
   }
 
+  function handleEdit(getCurrentBlog) {
+    setCurrentEditedBlogID(getCurrentBlog?._id)
+    setBlogFormData({
+      title: getCurrentBlog?.title,
+      description: getCurrentBlog?.description,
+    })
+    setOpenBlogDialog(true)
+  }
+
   return (
     <main className=" min-h-screen  flex flex-col gap-10  p-24">
       <AddNewBlog
@@ -77,6 +94,8 @@ export default function BlogOverview({ blogList }) {
         blogFormData={blogFormData}
         setBlogFormData={setBlogFormData}
         handleSaveBlogData={handleSaveBlogData}
+        setCurrentEditedBlogID={setCurrentEditedBlogID}
+        currentEditedBlogID={currentEditedBlogID}
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
         {blogList && blogList.length > 0 ? (

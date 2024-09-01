@@ -25,7 +25,9 @@ function AddNewBlog({
   return (
     <Fragment>
       <div>
-        <Button onClick={() => setOpenBlogDialog(true)}>Add New Blog</Button>
+        <Button onClick={() => setOpenBlogDialog(true)}>
+          {currentEditedBlogID ? "Edit Blog" : "Add New Blog "}
+        </Button>
       </div>
       <Dialog
         open={openBlogDialog}
@@ -35,6 +37,7 @@ function AddNewBlog({
             title: "",
             description: "",
           })
+          setCurrentEditedBlogID(null)
         }}
       >
         <DialogContent className="sm:max-w-[425px]">
